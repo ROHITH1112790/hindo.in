@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Instructor Dashboard - Hindi E-Learning Platform</title>
+  <link rel="shortcut icon" type="image/x-icon" href="/static/sample.ico" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;700&display=swap');
@@ -16,72 +17,53 @@
       background-color: #f4f4f4;
       overflow-x: hidden;
     }
-    
-    /* Announcement Section */
-    .announcement-section {
-      background-color: #f0f8ff;
-      color: black;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px;
-    }
 
-    .announcement-list {
-      background-color: #ecf0f1;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-
-    .announcement-item {
-      background-color: white;
-      color: black;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      border: 1px solid #bdc3c7;
-    }
-
-    /* Video List */
-    .video-list {
-      background-color: #ecf0f1;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-
-    .video-item {
-      background-color: white;
-      color: black;
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      border: 1px solid #bdc3c7;
-    }
-
-    label[for="video-upload"] {
-      display: inline-block;
+    .navbar {
+      background-color: #2c3e50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       padding: 10px 20px;
-      background-color: #007bff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 60px;
+    }
+
+    .navbar img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .navbar button {
+      background-color: #34495e;
       color: white;
-      border-radius: 4px;
+      border: none;
+      padding: 10px;
       cursor: pointer;
-      font-family: 'Geologica', sans-serif;
-      margin-right: 10px;
+      border-radius: 5px;
     }
 
     .dashboard {
       display: flex;
-      height: 100vh;
-      overflow: hidden;
     }
 
     .sidebar {
       width: 220px;
       background-color: #2c3e50;
       padding: 20px;
-      height: 100%;
+      height: 100vh;
       overflow-y: auto;
+      position: fixed;
+      left: 0;
+      top: 60px;
+      bottom: 0;
+      transition: transform 0.3s ease-in-out;
+      z-index: 1000;
+    }
+
+    .sidebar.active {
+      transform: translateX(-100%);
     }
 
     .sidebar a {
@@ -101,41 +83,30 @@
 
     .content {
       flex: 1;
-      margin-left: 0px;
-      padding: 0;
-      overflow-y: auto;
-      position: relative;
+      margin-left: 220px;
+      padding: 20px;
+      transition: margin-left 0.3s ease-in-out;
+    }
+
+    .content.full-width {
+      margin-left: 0;
     }
 
     .header {
-            background-color: #258cd9;
-            color: white;
-            padding: 30px;
-            text-align: center;
-            font-family: 'Geologica', sans-serif;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+      background-color: #258cd9;
+      color: white;
+      padding: 30px;
+      text-align: center;
+      font-family: 'Geologica', sans-serif;
     }
 
     .section {
       background-color: #ecf0f1;
-      width: 100;
+      width: 80%;
       padding: 20px;
       border-radius: 10px;
-      margin: 80px 20px 20px 20px;
+      margin: 20px auto;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      min-height: calc(100vh - 140px);
-      font-family: 'Montserrat', sans-serif;
-    }
-
-    textarea,
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      border: 1px solid #bdc3c7;
       font-family: 'Montserrat', sans-serif;
     }
 
@@ -201,66 +172,37 @@
       gap: 20px;
     }
 
-    .brand-logo {
-      width: 150px;
-      margin-bottom: 20px;
-    }
-
-    .header-logo {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-logo img {
-      width: 50px;
-    }
-
-    .header-logo h1 {
-      flex-grow: 1;
-      text-align: center;
-      margin: 0;
-    }
-
-    .button-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 20px;
-      border: 1px solid #bdc3c7;
-      border-radius: 10px;
-      background-color: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-family: 'Geologica', sans-serif;
+    .button-group a,
+    .button-group button {
+      display: inline-block;
+      padding: 15px 30px;
+      margin: 10px;
       color: white;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 5px;
+      font-family: 'Geologica', sans-serif;
       font-size: 16px;
     }
 
-    .btn-primary {
+    .button-group .btn-primary,
+    .button-group button.btn-primary {
       background-color: #007bff;
-      border-color: #007bff;
     }
 
-    .btn-primary:hover {
+    .button-group .btn-primary:hover,
+    .button-group button.btn-primary:hover {
       background-color: #0056b3;
-      border-color: #0056b3;
     }
 
-    .btn-danger {
+    .button-group .btn-danger,
+    .button-group button.btn-danger {
       background-color: #dc3545;
-      border-color: #dc3545;
     }
 
-    .btn-danger:hover {
+    .button-group .btn-danger:hover,
+    .button-group button.btn-danger:hover {
       background-color: #c82333;
-      border-color: #c82333;
     }
 
     .announcement-section,
@@ -285,9 +227,12 @@
 </head>
 
 <body>
+  <div class="navbar">
+    <img src="/static/Logo Mark Colour.jpg" alt="Logo">
+    <button class="toggle-button" onclick="toggleSidebar()">☰</button>
+  </div>
   <div class="dashboard">
-    <div class="sidebar">
-      <img src="static/log.png" alt="Logo" class="brand-logo">
+    <div class="sidebar" id="sidebar">
       <a href="#" class="active" onclick="showSection('dashboard')">Dashboard</a>
       <a href="#" onclick="showSection('profile')">Profile</a>
       <a href="#" onclick="showSection('student-profiles')">Student Profiles</a>
@@ -295,11 +240,9 @@
       <a href="#" onclick="showSection('admin-announcement')">Admin Announcements</a>
       <a onclick="window.location.href='{{ url_for('landing_page') }}'">Logout</a>
     </div>
-    <div class="content">
+    <div class="content" id="content">
       <div class="header">
-        <div class="header-logo">
-          <h1>Instructor Dashboard</h1>
-        </div>
+        <h1>Instructor Dashboard</h1>
       </div>
       <div id="dashboard" class="section">
         <h2>Welcome, {{ teacher['fullname'] }}</h2>
@@ -398,7 +341,9 @@
         </div>
       </div>
       <div id="admin-announcement" class="section announcement-section" style="display: none;">
-        <h2>Admin Announcements</h2>
+        <center>
+          <h2>Admin Announcements</h2>
+        </center>
         <div id="admin-announcement-list" class="announcement-list">
           <!-- Admin announcements will be inserted here by JavaScript -->
         </div>
@@ -406,17 +351,12 @@
     </div>
   </div>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchInstructorCourses();
-      fetchStudentProfiles();
-      fetchAssignments();
-      fetchGradebook();
-      fetchCourseMaterials();
-      fetchSchedule();
-      fetchAnnouncements();
-      fetchUploadedVideos();
-      fetchAdminAnnouncements(); // Add this line
-    });
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.getElementById('content');
+      sidebar.classList.toggle('active');
+      content.classList.toggle('full-width');
+    }
 
     function showSection(sectionId) {
       const sections = document.querySelectorAll('.section');
@@ -427,6 +367,18 @@
       links.forEach(link => link.classList.remove('active'));
       document.querySelector(`.sidebar a[onclick="showSection('${sectionId}')"]`).classList.add('active');
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchInstructorCourses();
+      fetchStudentProfiles();
+      fetchAssignments();
+      fetchGradebook();
+      fetchCourseMaterials();
+      fetchSchedule();
+      fetchAnnouncements();
+      fetchUploadedVideos();
+      fetchAdminAnnouncements();
+    });
 
     function fetchInstructorCourses() {
       fetch('/api/instructor_courses')
@@ -449,7 +401,7 @@
               `;
 
               courseCard.onclick = () => {
-                const teacherId = "{{ teacher['id'] }}";  // Ensure teacher.id is available in the template
+                const teacherId = "{{ teacher['id'] }}"; // Ensure teacher.id is available in the template
                 window.location.href = `/dashboard_upload?course_name=${encodeURIComponent(course.course_name)}&batch_id=${encodeURIComponent(course.batch_id)}&teacher_id=${encodeURIComponent(teacherId)}`;
               };
 
@@ -555,37 +507,27 @@
     }
 
     function fetchSchedule() {
-      const schedules = [
-        { id: 1, event: 'Class 1', time: '10:00 AM - 11:00 AM' },
-        { id: 2, event: 'Class 2', time: '11:00 AM - 12:00 PM' },
-      ];
+      // Fetch schedule data and update the schedule list
+      fetch('/api/instructor_schedule')
+        .then(response => response.json())
+        .then(data => {
+          const schedules = data.schedules;
+          const scheduleContainer = document.getElementById('schedule-list');
+          scheduleContainer.innerHTML = '';
 
-      const scheduleContainer = document.getElementById('schedule-list');
-      scheduleContainer.innerHTML = '';
+          schedules.forEach(schedule => {
+            const scheduleCard = document.createElement('div');
+            scheduleCard.classList.add('card');
 
-      schedules.forEach(schedule => {
-        const scheduleCard = document.createElement('div');
-        scheduleCard.classList.add('card');
+            scheduleCard.innerHTML = `
+              <h3>${schedule.event}</h3>
+              <p>${schedule.time}</p>
+            `;
 
-        scheduleCard.innerHTML = `
-          <h3>${schedule.event}</h3>
-          <p>${schedule.time}</p>
-        `;
-
-        scheduleContainer.appendChild(scheduleCard);
-      });
-    }
-
-    function addClass() {
-      const className = document.getElementById('class-name').value;
-      const classDescription = document.getElementById('class-description').value;
-      if (className && classDescription) {
-        // Implement API call to add a class
-        document.getElementById('class-name').value = '';
-        document.getElementById('class-description').value = '';
-      } else {
-        alert('Please enter both class name and description.');
-      }
+            scheduleContainer.appendChild(scheduleCard);
+          });
+        })
+        .catch(error => console.error('Error fetching schedule:', error));
     }
 
     function addAssignment() {
