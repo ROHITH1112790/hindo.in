@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard - Hindi E-Learning Platform</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/sample.ico" />
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;700&display=swap');
@@ -16,9 +17,34 @@
             overflow-x: hidden;
         }
 
+        .navbar {
+            background-color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: 60px;
+        }
+
+        .navbar img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .navbar button {
+            background-color: #34495e;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
         .dashboard {
             display: flex;
-            height: 100vh;
         }
 
         .sidebar {
@@ -27,6 +53,16 @@
             padding: 20px;
             height: 100vh;
             overflow-y: auto;
+            position: fixed;
+            left: 0;
+            top: 60px; /* Adjusted to start below the navbar */
+            bottom: 0;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            transform: translateX(-100%);
         }
 
         .sidebar a {
@@ -46,30 +82,32 @@
 
         .content {
             flex: 1;
-            padding: 0;
-            overflow-y: auto;
-            position: relative;
+            margin-left: 220px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .content.full-width {
+            margin-left: 0;
         }
 
         .header {
             background-color: #258cd9;
             color: white;
-            padding: 30px;
+            padding: 28px;
             text-align: center;
             font-family: 'Geologica', sans-serif;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
         }
 
         .section {
             background-color: #ecf0f1;
             padding: 20px;
             border-radius: 10px;
-            margin: 20px;
+            margin: 20px auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            min-height: calc(100vh - 140px);
+            width: 60%;
             font-family: 'Montserrat', sans-serif;
+            text-align: center; /* Centering the content inside the section */
         }
 
         .cards {
@@ -175,24 +213,47 @@
         .button-group .btn-danger:hover {
             background-color: #c82333;
         }
+
+        @media (max-width: 768px) {
+            .content {
+                margin-left: 0;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .navbar .toggle-button {
+                display: block;
+            }
+
+            .content.full-width {
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <img src="static/Logo Mark Colour.jpg" alt="Logo">
+        <button class="toggle-button" onclick="toggleSidebar()">☰</button>
+    </div>
     <div class="dashboard">
-        <div class="sidebar">
-            <img src="Logo Mark Colour.png" alt="Logo" class="brand-logo">
+        <div class="sidebar" id="sidebar">
             <a href="#" class="active" onclick="loadPage('dashboard')">Dashboard</a>
             <a href="#" onclick="loadPage('schedule-meeting')">Schedule Meeting</a>
             <a href="#" onclick="loadPage('instructor-information')">Instructor</a>
             <a href="#" onclick="loadPage('profile')">Profile</a>
-            <a href="#" onclick="loadPage('admin-announcement')">Admin Announcement</a> <!-- New Admin Announcement Link -->
+            <a href="#" onclick="loadPage('admin-announcement')">Admin Announcement</a>
             <a onclick="window.location.href='{{ url_for('landing_page') }}'">Logout</a>
         </div>
-        <div class="content">
+        <div class="content" id="content">
             <div class="header">
-                <div class="header-logo">
-                    <h1>Student Dashboard</h1>
-                </div>
+                <h1>Student Dashboard</h1>
             </div>
             <div id="dashboard" class="section">
                 <h2>Welcome, {{ student['fullname'] }}</h2>
@@ -254,6 +315,13 @@
         </div>
     </div>
     <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            sidebar.classList.toggle('active');
+            content.classList.toggle('full-width');
+        }
+
         function loadPage(sectionId) {
             const sections = document.querySelectorAll('.section');
             sections.forEach(section => section.style.display = 'none');
@@ -280,9 +348,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             fetchAnnouncements();
             fetchRecordedVideos();
-            fetchAdminAnnouncements(); // Add this line
-            fetchInstructorDetails(); // Add this line
-            fetchStudentDetails(); // Add this line
+            fetchAdminAnnouncements();
+            fetchInstructorDetails();
+            fetchStudentDetails();
         });
 
         function fetchAnnouncements() {
@@ -346,7 +414,7 @@
         }
 
         function fetchInstructorDetails() {
-            const teacherId = "{{ student['teacher_id'] }}"; // Make sure teacher_id is available
+            const teacherId = "{{ student['teacher_id'] }}";
             fetch(`/api/instructor_details/${teacherId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -397,7 +465,7 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        integrity="sha384-YvpcrYf0tY3LHB6ONNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 </body>
 </html>
