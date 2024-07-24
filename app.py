@@ -554,6 +554,10 @@ def course9():
 def course10():
     return render_template('course10.html')
 
+@app.route('/DBHPS')
+def dbhps_page():
+    return render_template('DBHPS.html')
+
 @app.route('/create_batch', methods=['POST'])
 def create_batch():
     print("Received request to create batch")
